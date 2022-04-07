@@ -34,7 +34,7 @@ describe("02-list", () => {
   });
 
   describe("2 - Crie endpoints para listar os produtos e as vendas", () => {
-    it("Será validado que todos produtos estão sendo retornados", async () => {
+    it.skip("Será validado que todos produtos estão sendo retornados", async () => {
       await frisby
         .get(`${url}/products`)
         .expect("status", 200)
@@ -61,7 +61,7 @@ describe("02-list", () => {
         });
     });
 
-    it("Será validado que é possível listar um determinado produto", async () => {
+    it.skip("Será validado que é possível listar um determinado produto", async () => {
       await frisby
         .get(`${url}/products/1`)
         .expect("status", 200)
@@ -77,7 +77,7 @@ describe("02-list", () => {
         });
     });
 
-    it("Será validado que não é possível listar um produto que não existe", async () => {
+    it.skip("Será validado que não é possível listar um produto que não existe", async () => {
       await frisby
         .get(`${url}/products/${INVALID_ID}`)
         .expect("status", 404)
@@ -89,7 +89,7 @@ describe("02-list", () => {
         });
     });
 
-    it("Será validado que todas as vendas estão sendo retornadas", async () => {
+    it.skip("Será validado que todas as vendas estão sendo retornadas", async () => {
       await frisby
         .get(`${url}/sales/`)
         .expect("status", 200)
@@ -130,7 +130,7 @@ describe("02-list", () => {
         });
     });
 
-    it("Será validado que é possível listar uma determinada venda", async () => {
+    it.skip("Será validado que é possível listar uma determinada venda", async () => {
       await frisby
         .get(`${url}/sales/1`)
         .expect("status", 200)
@@ -162,7 +162,7 @@ describe("02-list", () => {
         });
     });
 
-    it("Será validado que não é possível listar uma venda inexistente", async () => {
+    it.skip("Será validado que não é possível listar uma venda inexistente", async () => {
       await frisby
         .get(`${url}/sales/${INVALID_ID}`)
         .expect("status", 404)
