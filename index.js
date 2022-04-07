@@ -4,7 +4,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 
 // -----------
-const ProductsModel = require('./models/produtsModel');
+const ProductsController = require('./controllers/productsController');
 
 const ProductsRouter = require('./routes/products');
 
@@ -18,13 +18,7 @@ app.get('/', (_request, response) => {
 });
 // --------
 
-app.get('/products/:id', async (req, res) => {
-  const { id } = req.params;
-
-  const product = await ProductsModel.findById(id);
-
-  return res.json(product);
-});
+app.get('/products/:id', ProductsController.findById);
 
 app.use('/products', ProductsRouter);
 

@@ -9,8 +9,8 @@ const ProductsServices = require('../../../services/productsService');
 const ProductsController = require('../../../controllers/productsController');
 
 describe('Testa a camada controller de produtos', () => {
-  const request = {};
   const response = {};
+  const request = { params: { id: 1 }};
 
   before(() => {
     response.status = sinon.stub().returns(response);
@@ -43,7 +43,6 @@ describe('Testa a camada controller de produtos', () => {
   describe('Ao fazer uma requisição ao endpoint /products/:id', () => {
 
     describe('Caso exista um produto com o id passado', () => {
-      request.params = 1;
       
       it('é chamado o status com o código 200', async () => {
         await ProductsController.findById(request, response);
@@ -53,16 +52,16 @@ describe('Testa a camada controller de produtos', () => {
 
       it('é chamado o json com o produto', async () => {
         await ProductsController.findById(request, response);
-
         expect(response.json.calledWith(product[0][0])).to.be.equal(true);
       });
     });
 
     describe('Caso não não exista um produto', () => {
-      request.params = 100;
       const ERROR = { message: 'Product not found' }
-
+      
       it('é chamado o status com o código 404', async () => {
+        request.params.id = 100;
+
         await ProductsController.findById(request, response);
 
         expect(response.status.calledWith(HTTP_NOT_FOUND_STATUS)).to.be.equal(true);
