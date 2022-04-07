@@ -1,8 +1,10 @@
 const sinon = require('sinon');
 const { expect } = require('chai');
 
-const { HTTP_OK_STATUS } = require('../../../helpers');
-const { products } = require('../stubs');
+const { HTTP_OK_STATUS, HTTP_NOT_FOUND_STATUS } = require('../../../helpers');
+const {
+  products,
+  product } = require('../stubs');
 const ProductsServices = require('../../../services/productsService');
 const ProductsController = require('../../../controllers/productsController');
 
@@ -35,6 +37,42 @@ describe('Testa a camada controller de produtos', () => {
       await ProductsController.getAll(request, response);
 
       expect(response.json.calledWith(products)).to.be.equal(true);
+    });
+  });
+
+  describe('Ao fazer uma requisição ao endpoint /products/:id', () => {
+
+    describe('Caso exista um produto com o id passado', () => {
+      request.params = 1;
+      
+      it('é chamado o status com o código 200', async () => {
+        await ProductsController.findById(request, response);
+
+        expect(response.status.calledWith(HTTP_OK_STATUS)).to.be.equal(true);
+      });
+
+      it('é chamado o json com o produto', async () => {
+        await ProductsController.findById(request, response);
+
+        expect(response.json.calledWith(product[0][0])).to.be.equal(true);
+      });
+    });
+
+    describe('Caso não não exista um produto', () => {
+      request.params = 100;
+      const ERROR = { message: 'Product not found' }
+
+      it('é chamado o status com o código 404', async () => {
+        await ProductsController.findById(request, response);
+
+        expect(response.status.calledWith(HTTP_NOT_FOUND_STATUS)).to.be.equal(true);
+      });
+
+      it('é chamado o json com a mensagem de erro', async () => {
+        await ProductsController.findById(request, response);
+
+        expect(response.json.calledWith(ERROR)).to.be.equal(true);
+      });
     });
   });
 });

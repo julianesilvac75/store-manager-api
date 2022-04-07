@@ -45,7 +45,7 @@ describe('Testa a camada services de produtos', () => {
       const error = {
         error: {
           code: 'Not Found',
-          message: 'Produto não encontrado',
+          message: 'Product not found',
         },
       };
 
