@@ -5,7 +5,7 @@ const { products, product } = require('../stubs');
 const ProductsModel = require('../../../models/produtsModel');
 const ProductsService = require('../../../services/productsService');
 
-describe('Testa a camada services de produtos"', () => {
+describe('Testa a camada services de produtos', () => {
 
   describe('Ao fazer uma requisição ao endpoint /products', () => {
     
@@ -55,7 +55,6 @@ describe('Testa a camada services de produtos"', () => {
         expect(result).to.be.deep.equal(error);
       });
 
-      
     });
   });
 });

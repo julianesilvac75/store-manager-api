@@ -2,19 +2,22 @@ const sinon = require('sinon');
 const { expect } = require('chai');
 
 const { HTTP_OK_STATUS } = require('../../../helpers');
-const { products } = require('../data');
+const { products } = require('../stubs');
 const ProductsServices = require('../../../services/productsService');
 const ProductsController = require('../../../controllers/productsController');
 
-describe('Para o endpoint "/products', () => {
-  describe('traz todos os produtos', () => {
-    const request = {};
-    const response = {};
+describe('Testa a camada controller de produtos', () => {
+  const request = {};
+  const response = {};
+
+  before(() => {
+    response.status = sinon.stub().returns(response);
+    response.json = sinon.stub().returns(response);
+  });
+
+  describe('Ao fazer uma requisição ao endpoint /products', () => {
 
     before(() => {
-      response.status = sinon.stub().returns(response);
-      response.json = sinon.stub().returns(response);
-
       sinon.stub(ProductsServices, 'getAll').resolves(products);
     });
 
