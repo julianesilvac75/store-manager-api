@@ -9,7 +9,6 @@ const getAll = async () => {
 const findById = async (id) => {
   const product = await ProductsModel.findById(id);
 
-  console.log(product);
   if (!product) {
     return {
       error: {

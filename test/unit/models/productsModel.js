@@ -65,6 +65,14 @@ describe('Testa a camada model de produtos', () => {
 
     describe('caso nenhum produto seja encontrado', () => { 
 
+      before(() => {
+        sinon.stub(connection, 'execute').resolves([[]]);
+      });
+
+      after(() => {
+        connection.execute.restore();
+      });
+
       it('retorna "null"', async () =>{
         const result = await ProductsModel.findById(100);
 

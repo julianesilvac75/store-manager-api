@@ -31,6 +31,14 @@ describe('Testa a camada services de produtos', () => {
 
       const ID = 1;
 
+      before(() => {
+        sinon.stub(ProductsModel, 'findById').resolves(product[0]);
+      });
+
+      after(() => {
+        ProductsModel.findById.restore();
+      })
+
       it('retorna um array com o produto esperado', async () => {
         const result = await ProductsService.findById(ID);
 
@@ -48,6 +56,14 @@ describe('Testa a camada services de produtos', () => {
           message: 'Product not found',
         },
       };
+
+      before(() => {
+        sinon.stub(ProductsModel, 'findById').resolves(null);
+      });
+
+      after(() => {
+        ProductsModel.findById.restore();
+      })
 
       it('retorna um objeto de erro', async () => {
         const result = await ProductsService.findById(ID);
