@@ -9,7 +9,14 @@ const getAll = async () => {
 const findById = async (id) => {
   const product = await ProductsModel.findById(id);
 
-  if (!product) return false;
+  if (!product) {
+    return {
+      error: {
+        code: 'Not Found',
+        message: 'Produto não encontrado',
+      },
+    };
+  }
 
   return product;
 };
