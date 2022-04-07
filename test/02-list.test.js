@@ -34,7 +34,7 @@ describe("02-list", () => {
   });
 
   describe("2 - Crie endpoints para listar os produtos e as vendas", () => {
-    it.skip("Será validado que todos produtos estão sendo retornados", async () => {
+    it("Será validado que todos produtos estão sendo retornados", async () => {
       await frisby
         .get(`${url}/products`)
         .expect("status", 200)

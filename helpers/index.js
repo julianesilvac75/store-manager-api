@@ -1,0 +1,7 @@
+const HTTP_OK_STATUS = 200;
+const HTTP_BAD_REQUEST_STATUS = 400;
+
+module.exports = {
+  HTTP_OK_STATUS,
+  HTTP_BAD_REQUEST_STATUS,
+};
