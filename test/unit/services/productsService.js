@@ -42,18 +42,20 @@ describe('Testa a camada services de produtos"', () => {
     describe('caso não exista um produto', () => {
 
       const ID = 100;
+      const error = {
+        error: {
+          code: 'Not Found',
+          message: 'Produto não encontrado',
+        },
+      };
 
-      it('retorna um valor booleano', async () => {
+      it('retorna um objeto de erro', async () => {
         const result = await ProductsService.findById(ID);
 
-        expect(result).to.be.a('boolean');
+        expect(result).to.be.deep.equal(error);
       });
 
-      it('o booleano deve ser "false"', async () => {
-        const result = await ProductsService.findById(ID);
-
-        expect(result).to.be.equal(false);
-      });
+      
     });
   });
 });
