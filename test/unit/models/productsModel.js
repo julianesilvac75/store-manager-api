@@ -3,18 +3,21 @@ require('dotenv').config();
 const { expect } = require('chai');
 const sinon = require('sinon');
 
-const { products } = require('../data');
+const { 
+  products,
+  product } = require('../stubs');
 
+const connection = require('../../../models/connection');
 const ProductsModel = require('../../../models/produtsModel');
 
-describe('Para o endpoint "/products"', () => {
-  describe('caso a requisição tenha sucesso', () => { 
+describe('Testa a camada model de produtos', () => {
+  describe('Ao fazer uma requisição ao endpoint /products', () => { 
     before(() => {
-      sinon.stub(ProductsModel, 'getAll').resolves(products);
+      sinon.stub(connection, 'execute').resolves(products);
     });
 
     after(() => {
-      ProductsModel.getAll.restore();
+      connection.execute.restore();
     });
   
     it('retorna um array', async () => {
@@ -27,7 +30,46 @@ describe('Para o endpoint "/products"', () => {
     it('o array deve conter todos os produtos', async () => {
       const result = await ProductsModel.getAll();
       
-      expect(result).to.be.equal(products);
-    })
+      expect(result).to.be.equal(products[0]);
+    });
+  });
+
+  describe('Ao fazer uma requisição ao endpoint /products/:id', () => {
+    describe('caso um produto seja encontrado', () => {
+
+      const ID = 1;
+
+      before(() => {
+        sinon.stub(connection, 'execute').resolves(product);
+      });
+  
+      after(() => {
+        connection.execute.restore();
+      });
+
+      it('retorna um array com apenas um objeto', async () => {
+        const result = await ProductsModel.findById(ID);
+
+        expect(result.length).to.be.equal(1)
+        expect(result[0]).to.be.a('object');
+      });
+
+      it('o objeto tem as propriedades "id", "name" e "quantity"', async () => {
+        const result = await ProductsModel.findById(ID);
+
+        expect(result[0]).to.have.a.property('id');
+        expect(result[0]).to.have.a.property('name');
+        expect(result[0]).to.have.a.property('quantity');
+      });
+    });
+
+    describe('caso nenhum produto seja encontrado', () => { 
+
+      it('retorna "null"', async () =>{
+        const result = await ProductsModel.findById(100);
+
+        expect(result).to.be.equal(null);
+      });
+    });
   });
 });
