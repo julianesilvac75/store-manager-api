@@ -43,6 +43,14 @@ describe('Testa a camada controller de produtos', () => {
   describe('Ao fazer uma requisição ao endpoint /products/:id', () => {
 
     describe('Caso exista um produto com o id passado', () => {
+
+      before(() => {
+        sinon.stub(ProductsServices, 'findById').resolves(product[0]);
+      });
+
+      after(() => {
+        ProductsServices.findById.restore();
+      });
       
       it('é chamado o status com o código 200', async () => {
         await ProductsController.findById(request, response);
@@ -57,7 +65,20 @@ describe('Testa a camada controller de produtos', () => {
     });
 
     describe('Caso não não exista um produto', () => {
-      const ERROR = { message: 'Product not found' }
+      const ERROR = {
+        error: {
+          code: 'Not Found',
+          message: 'Product not found',
+        },
+      };
+
+      before(() => {
+        sinon.stub(ProductsServices, 'findById').resolves(ERROR);
+      });
+
+      after(() => {
+        ProductsServices.findById.restore();
+      });
       
       it('é chamado o status com o código 404', async () => {
         request.params.id = 100;
@@ -70,7 +91,7 @@ describe('Testa a camada controller de produtos', () => {
       it('é chamado o json com a mensagem de erro', async () => {
         await ProductsController.findById(request, response);
 
-        expect(response.json.calledWith(ERROR)).to.be.equal(true);
+        expect(response.json.calledWith({ message: 'Product not found' })).to.be.equal(true);
       });
     });
   });
