@@ -8,7 +8,7 @@ const {
 const ProductsServices = require('../../../services/productsService');
 const ProductsController = require('../../../controllers/productsController');
 
-describe('Testa a camada controller de produtos', () => {
+describe('Testa a camada Controller de produtos', () => {
   const response = {};
   const request = { params: { id: 1 }};
 
@@ -20,7 +20,7 @@ describe('Testa a camada controller de produtos', () => {
   describe('Ao fazer uma requisição ao endpoint /products', () => {
 
     before(() => {
-      sinon.stub(ProductsServices, 'getAll').resolves(products);
+      sinon.stub(ProductsServices, 'getAll').resolves(products[0]);
     });
 
     after(() => {
@@ -36,7 +36,7 @@ describe('Testa a camada controller de produtos', () => {
     it('é chamado o json com todos os produtos', async () => {
       await ProductsController.getAll(request, response);
 
-      expect(response.json.calledWith(products)).to.be.equal(true);
+      expect(response.json.calledWith(products[0])).to.be.equal(true);
     });
   });
 

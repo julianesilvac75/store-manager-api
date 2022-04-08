@@ -5,12 +5,12 @@ const { products, product } = require('../stubs');
 const ProductsModel = require('../../../models/produtsModel');
 const ProductsService = require('../../../services/productsService');
 
-describe('Testa a camada services de produtos', () => {
+describe('Testa a camada Services de produtos', () => {
 
   describe('Ao fazer uma requisição ao endpoint /products', () => {
     
     before(() => {
-      sinon.stub(ProductsModel, 'getAll').resolves(products);
+      sinon.stub(ProductsModel, 'getAll').resolves(products[0]);
     });
   
     after(() => {
@@ -20,7 +20,7 @@ describe('Testa a camada services de produtos', () => {
     it('retorna todos os dados de produtos', async () => {
       const result = await ProductsService.getAll();
   
-      expect(result).to.be.deep.equal(products)
+      expect(result).to.be.deep.equal(products[0])
     });
 
   });
