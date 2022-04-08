@@ -6,6 +6,22 @@ const getAll = async () => {
   return sales;
 };
 
+const findById = async (id) => {
+  const salesById = await SalesModel.findById(id);
+
+  if (!salesById) {
+    return {
+      error: {
+        code: 'Not Found',
+        message: 'Sale not found',
+      },
+    };
+  }
+
+  return salesById;
+};
+
 module.exports = {
   getAll,
+  findById,
 };
