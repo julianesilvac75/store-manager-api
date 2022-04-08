@@ -50,7 +50,7 @@ describe('Testa a camada Controller de produtos', () => {
     describe('caso o produto ainda não exista', () => {
 
       before(() => {
-        sinon.stub(ProductsServices, 'create').resolves(product[0]);
+        sinon.stub(ProductsServices, 'create').resolves(product[0][0]);
       });
 
       after(() => {
