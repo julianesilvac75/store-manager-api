@@ -11,7 +11,7 @@ const connection = require('../../../models/connection');
 const ProductsModel = require('../../../models/produtsModel');
 
 describe('Testa a camada Model de produtos', () => {
-  describe('Ao facessar todos os produtos', () => { 
+  describe('Ao acessar todos os produtos', () => { 
     before(() => {
       sinon.stub(connection, 'execute').resolves(products);
     });
@@ -34,12 +34,20 @@ describe('Testa a camada Model de produtos', () => {
     });
   });
 
-  describe('Ao inserir todas as informações corretas', () => {
+  describe('Ao inserir todas as informações corretas numa requisição', () => {
     const PRODUCT = {
       id: 1,
       name: 'produto',
       quantity: 10
     };
+
+    before(() => {
+      sinon.stub(connection, 'execute').returns([{ insertId: 1 }]);
+    });
+
+    after(() => {
+      connection.execute.restore();
+    })
 
     it('cria um novo produto', async () => {
       const result = await ProductsModel.create({ name: 'produto', quantity: 10 });
