@@ -7,7 +7,7 @@ const ProductsService = require('../../../services/productsService');
 
 describe('Testa a camada Services de produtos', () => {
 
-  describe('Ao fazer uma requisição ao endpoint /products', () => {
+  describe('Ao acessar todos os produtos', () => {
     
     before(() => {
       sinon.stub(ProductsModel, 'getAll').resolves(products[0]);
@@ -21,6 +21,39 @@ describe('Testa a camada Services de produtos', () => {
       const result = await ProductsService.getAll();
   
       expect(result).to.be.deep.equal(products[0])
+    });
+
+    describe('Ao criar um novo produto', () => {
+
+      describe('se o produto ainda não existe', () => {
+        const NEW_PRODUCT = {
+          id: 1,
+          name: 'novo produto',
+          quantity: 10
+        };
+        
+        it('retorna um objeto com o produto criado', async () => {
+          const result = await ProductsService.create({ name: 'novo produto', quantity: 10 });
+
+          expect(result).to.be.a('object');
+          expect(result).to.be.deep.equal(NEW_PRODUCT);
+        });
+      });
+
+      describe('se o produto já existe', () => {
+        const ERROR = {
+          error: {
+            code: 'Conflict',
+            message: 'Product already exists',
+          },
+        };
+
+        it('retorna um objeto de erro', async () => {
+          const result = await ProductsService.create({ name: 'produto existente', quantity: 5 });
+
+          expect(result).to.be.deep.equal(ERROR);
+        });
+      })
     });
 
   });
