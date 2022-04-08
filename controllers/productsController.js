@@ -34,7 +34,7 @@ const create = async (req, res) => {
     return res.status(HTTP_CONFLICT_STATUS).json({ message: 'Product already exists' });
   }
 
-  return res.status(HTTP_CREATED_STATUS).json(newProduct[0]);
+  return res.status(HTTP_CREATED_STATUS).json(newProduct);
 };
 
 module.exports = {
