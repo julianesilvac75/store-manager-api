@@ -1,7 +1,7 @@
 const sinon = require('sinon');
 const { expect } = require('chai');
 
-const { HTTP_OK_STATUS, HTTP_NOT_FOUND_STATUS } = require('../../../helpers');
+const { HTTP_OK_STATUS, HTTP_NOT_FOUND_STATUS, HTTP_CREATED_STATUS, HTTP_CONFLICT_STATUS } = require('../../../helpers');
 const {
   products,
   product } = require('../stubs');
@@ -10,14 +10,20 @@ const ProductsController = require('../../../controllers/productsController');
 
 describe('Testa a camada Controller de produtos', () => {
   const response = {};
-  const request = { params: { id: 1 }};
+  const request = { 
+    params: { id: 1 },
+    body: {
+      name: 'Martelo de Thor',
+      quantity: 10
+    },
+  };
 
   before(() => {
     response.status = sinon.stub().returns(response);
     response.json = sinon.stub().returns(response);
   });
 
-  describe('Ao fazer uma requisição ao endpoint /products', () => {
+  describe('Ao acessar todos os produtos', () => {
 
     before(() => {
       sinon.stub(ProductsServices, 'getAll').resolves(products[0]);
@@ -37,6 +43,38 @@ describe('Testa a camada Controller de produtos', () => {
       await ProductsController.getAll(request, response);
 
       expect(response.json.calledWith(products[0])).to.be.equal(true);
+    });
+  });
+
+  describe('Ao criar um novo produto', () => {
+    describe('caso o produto ainda não exista', () => {
+
+      it('é chamado o status com o código 201', async () => {
+        await ProductsController.create(request, response);
+
+        expect(response.status.calledWith(HTTP_CREATED_STATUS)).to.be.equal(true);
+      });
+
+      it('é chamado o json com o novo produto', async () => {
+        await ProductsController.create(request, response);
+        
+        expect(response.json.calledWith(product[0][0])).to.be.equal(true);
+      });
+    });
+
+    describe('caso o produto já exista', () => {
+      
+      it('é chamado o status com o código 409', async () => {
+        await ProductsController.create(request, response);
+
+        expect(response.status.calledWith(HTTP_CONFLICT_STATUS)).to.be.equal(true);
+      });
+
+      it('é chamado o json com a mensagem de erro', async () => {
+        await ProductsController.create(request, response);
+
+        expect(response.json.calledWith({ message: 'Product already exists' })).to.be.equal(true);
+      });
     });
   });
 
