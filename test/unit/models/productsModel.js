@@ -56,6 +56,41 @@ describe('Testa a camada Model de produtos', () => {
     })
   });
 
+  describe('Ao procurar um produto pelo nome', () => {
+
+    describe('se o produto já existe', () => {
+      before(() => {
+        sinon.stub(connection, 'execute').resolves(product);
+      });
+
+      after(() => {
+        connection.execute.restore();
+      });
+
+      it('retorna um array com o produto', async () => {
+        const result = await ProductsModel.findByName('Martelo de Thor');
+
+        expect(result).to.be.a('array');
+        expect(result).to.be.deep.equal(product[0]);
+      });
+    });
+
+    describe('se o produto não existe', () => {
+      before(() => {
+        sinon.stub(connection, 'execute').resolves([[]]);
+      });
+
+      after(() => {
+        connection.execute.restore();
+      })
+      it('retorna "null"', async () => {
+        const result = await ProductsModel.findByName('novo produto');
+
+        expect(result).to.be.equal(null);
+      });
+    });
+  });
+
   describe('Ao acessar um produto pelo id', () => {
     describe('caso um produto seja encontrado', () => {
 

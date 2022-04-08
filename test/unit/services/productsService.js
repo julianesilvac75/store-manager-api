@@ -28,9 +28,19 @@ describe('Testa a camada Services de produtos', () => {
       describe('se o produto ainda não existe', () => {
         const NEW_PRODUCT = {
           id: 1,
-          name: 'novo produto',
+          name: 'novíssimo',
           quantity: 10
         };
+
+        before(() => {
+          sinon.stub(ProductsModel, 'findByName').resolves(null);
+          sinon.stub(ProductsModel, 'create').resolves(NEW_PRODUCT);
+        });
+
+        after(() => {
+          ProductsModel.findByName.restore();
+          ProductsModel.create.restore();
+        })
         
         it('retorna um objeto com o produto criado', async () => {
           const result = await ProductsService.create({ name: 'novo produto', quantity: 10 });
@@ -47,9 +57,17 @@ describe('Testa a camada Services de produtos', () => {
             message: 'Product already exists',
           },
         };
+        
+        before(() => {
+          sinon.stub(ProductsModel, 'findByName').resolves(true);
+        });
+
+        after(() => {
+          ProductsModel.findByName.restore();
+        });
 
         it('retorna um objeto de erro', async () => {
-          const result = await ProductsService.create({ name: 'produto existente', quantity: 5 });
+          const result = await ProductsService.create({ name: 'novíssimo', quantity: 5 });
 
           expect(result).to.be.deep.equal(ERROR);
         });
