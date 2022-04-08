@@ -49,6 +49,14 @@ describe('Testa a camada Controller de produtos', () => {
   describe('Ao criar um novo produto', () => {
     describe('caso o produto ainda não exista', () => {
 
+      before(() => {
+        sinon.stub(ProductsServices, 'create').resolves(product[0]);
+      });
+
+      after(() => {
+        ProductsServices.create.restore();
+      });
+
       it('é chamado o status com o código 201', async () => {
         await ProductsController.create(request, response);
 
@@ -63,6 +71,20 @@ describe('Testa a camada Controller de produtos', () => {
     });
 
     describe('caso o produto já exista', () => {
+      const ERROR = {
+        error: {
+          code: 'Conflict',
+          message: 'Product already exists',
+        },
+      };
+
+      before(() => {
+        sinon.stub(ProductsServices, 'create').resolves(ERROR);
+      });
+
+      after(() => {
+        ProductsServices.create.restore();
+      });
       
       it('é chamado o status com o código 409', async () => {
         await ProductsController.create(request, response);
