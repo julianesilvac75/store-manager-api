@@ -11,7 +11,7 @@ const connection = require('../../../models/connection');
 const ProductsModel = require('../../../models/produtsModel');
 
 describe('Testa a camada Model de produtos', () => {
-  describe('Ao fazer uma requisição ao endpoint /products', () => { 
+  describe('Ao facessar todos os produtos', () => { 
     before(() => {
       sinon.stub(connection, 'execute').resolves(products);
     });
@@ -34,7 +34,21 @@ describe('Testa a camada Model de produtos', () => {
     });
   });
 
-  describe('Ao fazer uma requisição ao endpoint /products/:id', () => {
+  describe('Ao inserir todas as informações corretas', () => {
+    const PRODUCT = {
+      id: 1,
+      name: 'produto',
+      quantity: 10
+    };
+
+    it('cria um novo produto', async () => {
+      const result = await ProductsModel.create({ name: 'produto', quantity: 10 });
+
+      expect(result).to.be.deep.equal(PRODUCT);
+    })
+  });
+
+  describe('Ao acessar um produto pelo id', () => {
     describe('caso um produto seja encontrado', () => {
 
       const ID = 1;
