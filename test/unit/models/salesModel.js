@@ -3,7 +3,7 @@ require('dotenv').config();
 const { expect } = require('chai');
 const sinon = require('sinon');
 
-const { sales } = require('../stubs');
+const { sales, salesById } = require('../stubs');
 
 const connection = require('../../../models/connection');
 const SalesModel = require('../../../models/salesModel');
@@ -30,6 +30,54 @@ describe('Testa a camada Model de sales', () => {
       const result = await SalesModel.getAll();
 
       expect(result).to.be.deep.equal(sales[0]);
+    });
+  });
+
+  describe('Ao fazer uma requisição ao endpoint /sales/:id', () => {
+    describe('caso o id passado seja encontrado', () => {
+      const ID = 1;
+
+      before(() => {
+        sinon.stub(connection, 'execute').resolves(salesById);
+      });
+
+      after(() => {
+        connection.execute.restore();
+      });
+
+      it('retorna um array com as vendas relacionadas ao id', async () => {
+        const result = await SalesModel.findById(ID);
+
+        expect(result).to.be.a('array');
+        expect(result).to.be.deep.equal(salesById[0]);
+      });
+
+      it('as vendas tem as propriedades "date", "productId" e "quantity"', async () => {
+        const result = await SalesModel.findById(ID);
+
+        expect(result[0]).to.have.a.property('date');
+        expect(result[0]).to.have.a.property('productId');
+        expect(result[0]).to.have.a.property('quantity');
+      });
+    });
+
+    describe('caso o id passado não seja encontrado', () => {
+
+      const ID = 100;
+
+      before(() => {
+        sinon.stub(connection, 'execute').resolves([[]]);
+      });
+
+      after(() => {
+        connection.execute.restore();
+      });
+
+      it('retorna "null"', async () => {
+        const result = await SalesModel.findById(ID);
+
+        expect(result).to.be.equal(null);
+      });
     });
   });
 });

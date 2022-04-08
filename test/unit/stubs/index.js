@@ -51,8 +51,24 @@ const sales = [
   ],
 ];
 
+const salesById = [
+  [
+    {
+      date: '2022-04-07T20:10:21.000Z',
+      productId: 1,
+      quantity: 5
+    },
+    {
+      date: '2022-04-07T20:10:21.000Z',
+      productId: 2,
+      quantity: 10
+    },
+  ],
+];
+
 module.exports = {
   products,
   product,
   sales,
+  salesById,
 };
