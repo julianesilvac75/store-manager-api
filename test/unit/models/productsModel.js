@@ -10,7 +10,7 @@ const {
 const connection = require('../../../models/connection');
 const ProductsModel = require('../../../models/produtsModel');
 
-describe('Testa a camada model de produtos', () => {
+describe('Testa a camada Model de produtos', () => {
   describe('Ao fazer uma requisição ao endpoint /products', () => { 
     before(() => {
       sinon.stub(connection, 'execute').resolves(products);
@@ -30,7 +30,7 @@ describe('Testa a camada model de produtos', () => {
     it('o array deve conter todos os produtos', async () => {
       const result = await ProductsModel.getAll();
       
-      expect(result).to.be.equal(products[0]);
+      expect(result).to.be.deep.equal(products[0]);
     });
   });
 
