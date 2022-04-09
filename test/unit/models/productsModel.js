@@ -139,12 +139,21 @@ describe('Testa a camada Model de produtos', () => {
   });
 
   describe('Ao atualizar um produto', () => {
-    describe('quando o id fornecido é válido', () => {
-      const UPDATED = {
-        id: 1,
-        name: 'produto',
-        quantity: 15
-      };
+    const UPDATED = {
+      id: 1,
+      name: 'ave maria',
+      quantity: 15
+    };
+
+    describe('quando o produto é atualizado com sucesso', () => {
+
+      before(() => {
+        sinon.stub(connection, 'execute').resolves([{ changedRows: 1 }]);
+      });
+
+      after(() => {
+        connection.execute.restore();
+      });
 
       it('retorna um objeto com as informações atualizadas', async () => {
         const result = await ProductsModel.update(UPDATED);
@@ -153,5 +162,21 @@ describe('Testa a camada Model de produtos', () => {
         expect(result).to.be.deep.equal(UPDATED);
       });
     });
+
+    describe('quando nenhum produto é atualizado', () => {
+      before(() => {
+        sinon.stub(connection, 'execute').resolves([{ changedRows: 0 }]);
+      });
+
+      after(() => {
+        connection.execute.restore();
+      });
+
+      it('retorna "null"', async () => {
+        const result = await ProductsModel.update(UPDATED);
+
+        expect(result).to.be.equal(null);
+      });
+    })
   });
 });
