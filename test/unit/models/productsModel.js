@@ -137,4 +137,21 @@ describe('Testa a camada Model de produtos', () => {
       });
     });
   });
+
+  describe('Ao atualizar um produto', () => {
+    describe('quando o id fornecido é válido', () => {
+      const UPDATED = {
+        id: 1,
+        name: 'produto',
+        quantity: 15
+      };
+
+      it('retorna um objeto com as informações atualizadas', async () => {
+        const result = ProductsModel.update({ name: 'produto', quantity: 15 });
+
+        expect(result).to.be.a('object');
+        expect(result).to.be.deep.equal(UPDATED);
+      });
+    });
+  });
 });
