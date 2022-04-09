@@ -54,10 +54,12 @@ const update = async ({ id, name, quantity }) => {
   const query = `UPDATE StoreManager.products
   SET name = ?, quantity = ?
   WHERE id = ?;`;
-  await connection.execute(
+  const [{ changedRows }] = await connection.execute(
     query,
     [name, quantity, id],
   );
+
+  if (changedRows === 0) return null;
 
   return {
     id,
