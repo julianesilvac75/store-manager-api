@@ -6,7 +6,7 @@ const SalesModel = require('../../../models/salesModel');
 const SalesService = require('../../../services/salesService');
 
 describe('Testa a camada Services de sales', () => {
-  describe('Ao fazer uma requisição ao endpoint /sales', () => {
+  describe('Ao acessar todos as vendas', () => {
 
     before(() => {
       sinon.stub(SalesModel, 'getAll').resolves(sales[0]);
@@ -23,7 +23,7 @@ describe('Testa a camada Services de sales', () => {
     });
   });
 
-  describe('Ao fazer uma requisição ao endpoint /sales/:id', () => {
+  describe('Ao acessar uma venda pelo id', () => {
 
     describe('caso existam vendas com o id passado', () => {
       const ID = 1;
@@ -68,6 +68,40 @@ describe('Testa a camada Services de sales', () => {
         expect(result).to.be.a('object');
         expect(result).to.be.deep.equal(ERROR);
       });
+    });
+  });
+
+  describe('Ao cadastrar uma nova venda', () => {
+
+    const PRODUCTS = [
+      {
+        "productId": 1,
+        "quantity": 2
+      },
+      {
+        "productId": 2,
+        "quantity": 5
+      }
+    ];
+
+    const SALE = {
+      id: 1,
+      itemsSold: PRODUCTS,
+    };
+
+    before(() => {
+      sinon.stub(SalesModel, 'create').resolves(SALE);
+    });
+
+    after(() => {
+      SalesModel.create.restore();
+    })
+
+    it('retorna um objeto com todas as informações da venda', async () => {
+      const result = await SalesService.create(PRODUCTS);
+
+      expect(result).to.be.a('object');
+      expect(result).to.be.deep.equal(SALE);
     });
   });
 });
