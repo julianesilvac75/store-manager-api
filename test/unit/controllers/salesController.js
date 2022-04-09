@@ -114,6 +114,12 @@ describe('Testa a camada Controller de sales', () => {
 
     before(() => {
       request.body = PRODUCTS;
+
+      sinon.stub(SalesService, 'create').resolves(SALE);
+    });
+
+    after(() => {
+      SalesService.create.restore();
     });
 
     it('é chamado o status com o código 201', async () => {
