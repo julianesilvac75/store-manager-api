@@ -5,7 +5,7 @@ describe("03-validations", () => {
   const url = `http://localhost:${process.env.PORT}`;
 
   describe("3 - Realiza validações nos produtos e nas vendas", () => {
-		it.skip("quando cadastrar um produto será validado que o campo name está presente no body", async () => {
+		it("quando cadastrar um produto será validado que o campo name está presente no body", async () => {
 			await frisby
 				.post(`${url}/products/`, {
 					quantity: 2,
@@ -18,7 +18,7 @@ describe("03-validations", () => {
 				});
 		});
 
-		it.skip("quando cadastrar um produto será validado que o campo name possui 5 ou mais caracteres", async () => {
+		it("quando cadastrar um produto será validado que o campo name possui 5 ou mais caracteres", async () => {
 			await frisby
 				.post(`${url}/products/`, {
 					name: "Arco",
@@ -33,7 +33,7 @@ describe("03-validations", () => {
 				}); 
 		});
 
-		it.skip("quando cadastrar um produto será validado que o campo quantity está presente no body", async () => {
+		it("quando cadastrar um produto será validado que o campo quantity está presente no body", async () => {
 			await frisby
 				.post(`${url}/products/`, {
 					name: "Olho de Thundera",
@@ -47,7 +47,7 @@ describe("03-validations", () => {
 				});
 		});
 
-		it.skip("quando cadastrar um produto será validado que o campo quantity é um número inteiro maior que zero", async  () => {
+		it("quando cadastrar um produto será validado que o campo quantity é um número inteiro maior que zero", async  () => {
 			await frisby
 				.post(`${url}/products`, {
 					name: "Produto do Batista",
@@ -64,7 +64,7 @@ describe("03-validations", () => {
 		});
 
 		// atualizações dos produtos
-		it.skip("quando atualizar um produto será validado que o campo name possui 5 ou mais caracteres", async  () => {
+		it("quando atualizar um produto será validado que o campo name possui 5 ou mais caracteres", async  () => {
 			await frisby
 				.put(`${url}/products/1`, {
 					name: "Mar",
@@ -79,7 +79,7 @@ describe("03-validations", () => {
 				}); 
 		});
 
-		it.skip("quando atualizar um produto será validado que o campo quantity está presente no body", async () => {
+		it("quando atualizar um produto será validado que o campo quantity está presente no body", async () => {
 			await frisby
 				.put(`${url}/products/1`, {
 					name: "Olho de Thundera",
@@ -93,7 +93,7 @@ describe("03-validations", () => {
 				});
 		});
 
-		it.skip("quando atualizar um produto será validado que o quantity é um número inteiro maior que zero", async () => {
+		it("quando atualizar um produto será validado que o quantity é um número inteiro maior que zero", async () => {
 			await frisby
 				.put(`${url}/products/1`, {
 					name: "Martelo de Thor",
@@ -109,7 +109,7 @@ describe("03-validations", () => {
 		});
 
 		// registro das vendas
-		it.skip("quando cadastrar uma venda será validado que o campo productId está presente no body", async () => {
+		it("quando cadastrar uma venda será validado que o campo productId está presente no body", async () => {
 			await frisby
 				.post(`${url}/sales/`, [
 					{
@@ -125,7 +125,7 @@ describe("03-validations", () => {
 				});
 		});
 
-		it.skip("quando cadastrar uma venda será validado que o campo quantity está presente no body", async () => {
+		it("quando cadastrar uma venda será validado que o campo quantity está presente no body", async () => {
 			await frisby
 				.post(`${url}/sales/`, [
 					{
@@ -141,7 +141,7 @@ describe("03-validations", () => {
 				});
 		});
 
-		it.skip("quando cadastrar uma venda será validado que o campo quantity é um número inteiro maior que zero", async () => {
+		it("quando cadastrar uma venda será validado que o campo quantity é um número inteiro maior que zero", async () => {
 			await frisby
 				.post(`${url}/sales/`, [
 					{
@@ -159,7 +159,7 @@ describe("03-validations", () => {
 		});
 
 	// atualizações das vendas
-	it.skip("quando atualizar uma venda Será validado que o campo productId está presente no body", async () => {
+	it("quando atualizar uma venda Será validado que o campo productId está presente no body", async () => {
 		await frisby
 			.put(`${url}/sales/1`, [
 				{
@@ -175,7 +175,7 @@ describe("03-validations", () => {
 		});
 	});
 
-	it.skip("quando atualizar uma venda Será validado que o campo quantity está presente no body", async () => {
+	it("quando atualizar uma venda Será validado que o campo quantity está presente no body", async () => {
 		await frisby
 			.put(`${url}/sales/1`, [
 				{
@@ -191,7 +191,7 @@ describe("03-validations", () => {
 			});
 	});
 
-	it.skip("quando atualizar uma venda Será validado que o campo quantity é um número inteiro maior do que zero", async () => {
+	it("quando atualizar uma venda Será validado que o campo quantity é um número inteiro maior do que zero", async () => {
 		await frisby
 			.put(`${url}/sales/1`, [
 				{
