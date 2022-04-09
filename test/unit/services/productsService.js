@@ -76,7 +76,7 @@ describe('Testa a camada Services de produtos', () => {
 
   });
 
-  describe('Ao fazer uma requisição ao endpoint /products/:id', () => { 
+  describe('Ao acessar um produto pelo id', () => { 
      
     describe('caso exista um produto com o id passado', () => {
 
@@ -122,6 +122,39 @@ describe('Testa a camada Services de produtos', () => {
         expect(result).to.be.deep.equal(error);
       });
 
+    });
+  });
+
+  describe('Ao atualizar as informações de um produto', () => {
+    const UPDATED = {
+      id: 1,
+      name: 'ave maria',
+      quantity: 15
+    };
+
+    describe('caso o produto seja atualizado com sucesso', () => {
+
+      it('retorna um objeto com o produto atualizado', async () => {
+        const result = await ProductsService.update(UPDATED);
+
+        expect(result).to.be.a('object');
+        expect(result).to.be.deep.equal(UPDATED);
+      });
+    });
+
+    describe('caso o id informado não corresponda a nenhum produto', () => {
+      const ERROR = {
+        error: {
+          code: 'Not Found',
+          message: 'Product not found',
+        },
+      };
+
+      it('retorna um objeto com a mensagem de erro', async () => {
+        const result = await ProductsService.update(UPDATED);
+
+        expect(result).to.be.deep.equal(ERROR);
+      });
     });
   });
 });
