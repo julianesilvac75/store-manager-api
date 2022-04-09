@@ -147,7 +147,7 @@ describe('Testa a camada Model de produtos', () => {
       };
 
       it('retorna um objeto com as informações atualizadas', async () => {
-        const result = ProductsModel.update({ name: 'produto', quantity: 15 });
+        const result = await ProductsModel.update(UPDATED);
 
         expect(result).to.be.a('object');
         expect(result).to.be.deep.equal(UPDATED);
