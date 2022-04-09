@@ -9,7 +9,7 @@ const connection = require('../../../models/connection');
 const SalesModel = require('../../../models/salesModel');
 
 describe('Testa a camada Model de sales', () => {
-  describe('Ao fazer uma requisição ao endpoint /sales', () => {
+  describe('Ao acessar todas as vendas', () => {
 
     before(() => {
       sinon.stub(connection, 'execute').resolves(sales);
@@ -33,7 +33,7 @@ describe('Testa a camada Model de sales', () => {
     });
   });
 
-  describe('Ao fazer uma requisição ao endpoint /sales/:id', () => {
+  describe('Ao acessar uma venda pelo id', () => {
     describe('caso o id passado seja encontrado', () => {
       const ID = 1;
 
@@ -78,6 +78,35 @@ describe('Testa a camada Model de sales', () => {
 
         expect(result).to.be.equal(null);
       });
+    });
+  });
+
+  describe('Ao cadastrar uma nova venda', () => {
+
+    const PRODUCTS = [
+      {
+        "productId": 1,
+        "quantity": 2
+      },
+      {
+        "productId": 2,
+        "quantity": 5
+      }
+    ];
+
+    it('retorna um objeto com as propriedades "id" e "itemsSold"', async () => {
+      const result = await SalesModel.create(PRODUCTS);
+
+      expect(result).to.be.a('object');
+      expect(result).to.have.a.property('id');
+      expect(result).to.have.a.property('itemsSold');
+    });
+
+    it('a propriedade "itemsSold" deve possuir um array com todos os produtos vendidos', async () => {
+      const result = await SalesModel.create(PRODUCTS);
+
+      expect(result.itemsSold).to.be.a('array');
+      expect(result.itemsSold).to.be.deep.equal(PRODUCTS);
     });
   });
 });
