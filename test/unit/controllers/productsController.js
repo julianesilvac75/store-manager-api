@@ -1,7 +1,7 @@
 const sinon = require('sinon');
 const { expect } = require('chai');
 
-const { HTTP_OK_STATUS, HTTP_NOT_FOUND_STATUS, HTTP_CREATED_STATUS, HTTP_CONFLICT_STATUS } = require('../../../helpers');
+const { HTTP_OK_STATUS, HTTP_NOT_FOUND_STATUS, HTTP_CREATED_STATUS, HTTP_CONFLICT_STATUS, HTTP_BAD_REQUEST_STATUS } = require('../../../helpers');
 const {
   products,
   product } = require('../stubs');
@@ -100,7 +100,7 @@ describe('Testa a camada Controller de produtos', () => {
     });
   });
 
-  describe('Ao fazer uma requisição ao endpoint /products/:id', () => {
+  describe('Ao acessar um produto pelo id', () => {
 
     describe('Caso exista um produto com o id passado', () => {
 
@@ -124,7 +124,7 @@ describe('Testa a camada Controller de produtos', () => {
       });
     });
 
-    describe('Caso não não exista um produto', () => {
+    describe('Caso não exista um produto', () => {
       const ERROR = {
         error: {
           code: 'Not Found',
@@ -150,6 +150,61 @@ describe('Testa a camada Controller de produtos', () => {
 
       it('é chamado o json com a mensagem de erro', async () => {
         await ProductsController.findById(request, response);
+
+        expect(response.json.calledWith({ message: 'Product not found' })).to.be.equal(true);
+      });
+    });
+  });
+
+  describe('Ao atualizar as informações de um produto', () => {
+    describe('quando o id informado existe', () => {
+
+      const UPDATED = {
+        id: 1,
+        name: 'ave maria',
+        quantity: 15
+      };
+
+      describe('caso o produto seja atualizado com sucesso', () => {
+
+        it('o status é chamado com o código 200', async () => {
+          await ProductsController.update(request, response);
+
+          expect(response.status.calledWith(HTTP_OK_STATUS)).to.be.equal(true);
+        });
+
+        it('o json é chamado com as informações atualizadas do produto', async () => {
+          await ProductsController.update(request, response);
+
+          expect(response.json.calledWith(UPDATED)).to.be.equal(true);
+        });
+      });
+
+      describe('caso o produto não seja atualizado', () => {
+
+        it('o status é chamado com o código 400', async () => {
+          await ProductsController.update(request, response);
+
+          expect(response.status.calledWith(HTTP_BAD_REQUEST_STATUS)).to.be.equal(true);
+        });
+
+        it('o json é chamado com a mensagem de erro correta', async () => {
+          await ProductsController.update(request, response);
+
+          expect(response.json.calledWith({ message: 'Product could not be updated' })).to.be.equal(true);
+        });
+      });
+    });
+
+    describe('quando o id informado não existe', () => {
+      it('o status é chamado com o código 404', async () => {
+        await ProductsController.update(request, response);
+
+        expect(response.status.calledWith(HTTP_NOT_FOUND_STATUS)).to.be.equal(true);
+      });
+
+      it('o json é chamado com a mensagem de erro correta', async () => {
+        await ProductsController.update(request, response);
 
         expect(response.json.calledWith({ message: 'Product not found' })).to.be.equal(true);
       });
