@@ -126,23 +126,67 @@ describe('Testa a camada Services de produtos', () => {
   });
 
   describe('Ao atualizar as informações de um produto', () => {
-    const UPDATED = {
-      id: 1,
-      name: 'ave maria',
-      quantity: 15
-    };
+    
+    describe('quando o id informado existe', () => {
+      const UPDATED = {
+        id: 1,
+        name: 'ave maria',
+        quantity: 15
+      };
 
-    describe('caso o produto seja atualizado com sucesso', () => {
+      describe('caso o produto seja atualizado com sucesso', () => {
 
-      it('retorna um objeto com o produto atualizado', async () => {
-        const result = await ProductsService.update(UPDATED);
+        before(() => {
+          sinon.stub(ProductsModel, 'findById').resolves(product[0]);
+          sinon.stub(ProductsModel, 'update').resolves(UPDATED);
+        });
 
-        expect(result).to.be.a('object');
-        expect(result).to.be.deep.equal(UPDATED);
+        after(() => {
+          ProductsModel.findById.restore();
+          ProductsModel.update.restore();
+        });
+        
+        it('retorna um objeto com o produto atualizado', async () => {
+          const result = await ProductsService.update(UPDATED);
+  
+          expect(result).to.be.a('object');
+          expect(result).to.be.deep.equal(UPDATED);
+        });
+      });
+
+      describe('caso o produto não seja atualizado', () => {
+        const ERROR = {
+          error: {
+            code: 'Bad Request',
+            message: 'Product could not be updated',
+          }
+        };
+
+        before(() => {
+          sinon.stub(ProductsModel, 'findById').resolves(product[0]);
+          sinon.stub(ProductsModel, 'update').resolves(null);
+        });
+
+        after(() => {
+          ProductsModel.findById.restore();
+          ProductsModel.update.restore();
+        })
+        
+        it('retorna um objeto com a mensagem de erro correta', async () => {
+          const result = await ProductsService.update(UPDATED);
+
+          expect(result).to.be.deep.equal(ERROR);
+        });
       });
     });
 
+
     describe('caso o id informado não corresponda a nenhum produto', () => {
+      const UPDATED = {
+        id: 100,
+        name: 'ave maria',
+        quantity: 15
+      };
       const ERROR = {
         error: {
           code: 'Not Found',
@@ -150,7 +194,15 @@ describe('Testa a camada Services de produtos', () => {
         },
       };
 
-      it('retorna um objeto com a mensagem de erro', async () => {
+      before(() => {
+        sinon.stub(ProductsModel, 'findById').resolves(null);
+      });
+
+      after(() => {
+        ProductsModel.findById.restore();
+      });
+
+      it('retorna um objeto com a mensagem de erro correta', async () => {
         const result = await ProductsService.update(UPDATED);
 
         expect(result).to.be.deep.equal(ERROR);
