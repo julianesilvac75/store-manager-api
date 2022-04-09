@@ -49,12 +49,9 @@ const update = async (req, res) => {
       case 'Not Found':
         return res
           .status(HTTP_NOT_FOUND_STATUS).json({ message: 'Product not found' });
-      case 'Bad Request':
-        return res
-          .status(HTTP_BAD_REQUEST_STATUS).json({ message: 'Product could not be updated' });
       default:
         return res
-          .status(HTTP_BAD_REQUEST_STATUS).json(updatedProduct.error.message);
+          .status(HTTP_BAD_REQUEST_STATUS).json({ message: 'Product could not be updated' });
     }
   }
 
