@@ -1,7 +1,7 @@
 const sinon = require('sinon');
 const { expect } = require('chai');
 
-const { HTTP_OK_STATUS, HTTP_NOT_FOUND_STATUS } = require('../../../helpers');
+const { HTTP_OK_STATUS, HTTP_NOT_FOUND_STATUS, HTTP_CREATED_STATUS } = require('../../../helpers');
 const { sales, salesById } = require('../stubs');
 const SalesService = require('../../../services/salesService');
 const SalesController = require('../../../controllers/salesController');
@@ -15,7 +15,7 @@ describe('Testa a camada Controller de sales', () => {
     response.json = sinon.stub().returns(response);
   });
 
-  describe('Ao fazer uma requisição ao endpoint /sales', () => {
+  describe('Ao acessar todas as vendas', () => {
 
     before(() => {
       sinon.stub(SalesService, 'getAll').returns(sales[0]);
@@ -38,7 +38,7 @@ describe('Testa a camada Controller de sales', () => {
     });
   });
 
-  describe('Ao fazer uma requisição ao endpoint /sales/:id', () => {
+  describe('Ao acessar uma venda pelo id', () => {
     describe('Caso existam vendas com o id passado', () => {
 
       before(() => {
@@ -91,6 +91,41 @@ describe('Testa a camada Controller de sales', () => {
 
         expect(response.json.calledWith({ message: 'Sale not found' })).to.be.equal(true);
       });
+    });
+  });
+
+  describe('Ao criar uma nova venda', () => {
+
+    const PRODUCTS = [
+      {
+        "productId": 1,
+        "quantity": 2
+      },
+      {
+        "productId": 2,
+        "quantity": 5
+      }
+    ];
+
+    const SALE = {
+      id: 1,
+      itemsSold: PRODUCTS,
+    };
+
+    before(() => {
+      request.body = PRODUCTS;
+    });
+
+    it('é chamado o status com o código 201', async () => {
+      await SalesController.create(request, response);
+
+      expect(response.status.calledWith(HTTP_CREATED_STATUS)).to.be.equal(true);
+    });
+
+    it('é chamado o json com as informações sobre a venda', async () => {
+      await SalesController.create(request, response);
+
+      expect(response.json.calledWith(SALE)).to.be.equal(true);
     });
   });
 });
