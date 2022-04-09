@@ -34,7 +34,7 @@ describe("05-editProduct", () => {
   });
 
   describe("5 - Crie um endpoint para atualizar um produto", () => {
-    it.skip("Será validado que é possível atualizar um produto com sucesso", async () => {
+    it("Será validado que é possível atualizar um produto com sucesso", async () => {
       await frisby
         .put(`${url}/products/1`, {
           name: "Machado de Thor",
@@ -54,7 +54,7 @@ describe("05-editProduct", () => {
         });
     });
 
-    it.skip("Será validado que não é possível atualizar um produto que não existe", async () => {
+    it("Será validado que não é possível atualizar um produto que não existe", async () => {
       await frisby
         .put(`${url}/products/${INVALID_ID}`, {
           name: "produto inexistente",
