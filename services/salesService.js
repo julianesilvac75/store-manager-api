@@ -22,9 +22,9 @@ const findById = async (id) => {
 };
 
 const create = async (productsPayload) => {
-  const productsInfo = await SalesModel.create(productsPayload);
+  const sale = await SalesModel.create(productsPayload);
 
-  return productsInfo;
+  return sale;
 };
 
 module.exports = {

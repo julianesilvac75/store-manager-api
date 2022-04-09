@@ -1,5 +1,5 @@
 const SalesService = require('../services/salesService');
-const { HTTP_OK_STATUS, HTTP_NOT_FOUND_STATUS } = require('../helpers');
+const { HTTP_OK_STATUS, HTTP_NOT_FOUND_STATUS, HTTP_CREATED_STATUS } = require('../helpers');
 
 const getAll = async (req, res) => {
   const sales = await SalesService.getAll();
@@ -20,7 +20,16 @@ const findById = async (req, res) => {
   return res.status(HTTP_OK_STATUS).json(salesById);
 };
 
+const create = async (req, res) => {
+  const productsPayload = req.body;
+
+  const sale = await SalesService.create(productsPayload);
+
+  return res.status(HTTP_CREATED_STATUS).json(sale);
+};
+
 module.exports = {
   getAll,
   findById,
+  create,
 };
