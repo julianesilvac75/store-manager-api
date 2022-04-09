@@ -21,7 +21,14 @@ const findById = async (id) => {
   return salesById;
 };
 
+const create = async (productsPayload) => {
+  const productsInfo = await SalesModel.create(productsPayload);
+
+  return productsInfo;
+};
+
 module.exports = {
   getAll,
   findById,
+  create,
 };

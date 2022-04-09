@@ -2,7 +2,7 @@ const express = require('express');
 
 const router = express.Router();
 
-const SalesModel = require('../models/salesModel');
+const SalesService = require('../services/salesService');
 
 const SalesController = require('../controllers/salesController');
 
@@ -11,7 +11,7 @@ router.get('/:id', SalesController.findById);
 router.post('/', async (req, res) => {
   const productsPayload = req.body;
 
-  const teste = await SalesModel.create(productsPayload);
+  const teste = await SalesService.create(productsPayload);
 
   res.json(teste);
 });
