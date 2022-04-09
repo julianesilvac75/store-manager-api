@@ -94,19 +94,25 @@ describe('Testa a camada Model de sales', () => {
       }
     ];
 
-    it('retorna um objeto com as propriedades "id" e "itemsSold"', async () => {
-      const result = await SalesModel.create(PRODUCTS);
+    const SALE = {
+      id: 1,
+      itemsSold: PRODUCTS,
+    };
 
-      expect(result).to.be.a('object');
-      expect(result).to.have.a.property('id');
-      expect(result).to.have.a.property('itemsSold');
+    before(() => {
+      const callback = sinon.stub(connection, 'execute');
+      callback.onCall(0).resolves([{ insertId: 1}]);
+      callback.onCall(1).resolves();
     });
 
-    it('a propriedade "itemsSold" deve possuir um array com todos os produtos vendidos', async () => {
+    after(() => {
+      connection.execute.restore();
+    });
+    
+    it('deve retornar um objeto com as informações sobre a venda', async () => {
       const result = await SalesModel.create(PRODUCTS);
-
-      expect(result.itemsSold).to.be.a('array');
-      expect(result.itemsSold).to.be.deep.equal(PRODUCTS);
+      
+      expect(result).to.be.deep.equal(SALE);
     });
   });
 });
