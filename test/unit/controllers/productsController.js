@@ -167,7 +167,16 @@ describe('Testa a camada Controller de produtos', () => {
 
       describe('caso o produto seja atualizado com sucesso', () => {
 
+        before(() => {
+          sinon.stub(ProductsServices, 'update').resolves(UPDATED);
+        });
+
+        after(() => {
+          ProductsServices.update.restore();
+        });
+
         it('o status é chamado com o código 200', async () => {
+
           await ProductsController.update(request, response);
 
           expect(response.status.calledWith(HTTP_OK_STATUS)).to.be.equal(true);
@@ -181,6 +190,19 @@ describe('Testa a camada Controller de produtos', () => {
       });
 
       describe('caso o produto não seja atualizado', () => {
+        const ERROR = { error: {
+          code: 'Bad Request',
+          message: 'Product could not be updated',
+        },
+      };
+
+        before(() => {
+          sinon.stub(ProductsServices, 'update').resolves(ERROR);
+        });
+
+        after(() => {
+          ProductsServices.update.restore();
+        });
 
         it('o status é chamado com o código 400', async () => {
           await ProductsController.update(request, response);
@@ -197,6 +219,21 @@ describe('Testa a camada Controller de produtos', () => {
     });
 
     describe('quando o id informado não existe', () => {
+      const ERROR = {
+        error: {
+          code: 'Not Found',
+          message: 'Product not found',
+        },
+      };
+
+      before(() => {
+        sinon.stub(ProductsServices, 'update').resolves(ERROR);
+      });
+
+      after(() => {
+        ProductsServices.update.restore();
+      });
+      
       it('o status é chamado com o código 404', async () => {
         await ProductsController.update(request, response);
 
