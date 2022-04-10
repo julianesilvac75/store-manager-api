@@ -253,6 +253,14 @@ describe('Testa a camada Controller de produtos', () => {
 
     describe('Caso o produto seja deletado com sucesso', () => {
 
+      before(() => {
+        sinon.stub(ProductsServices, 'destroy').resolves(true);
+      });
+
+      after(() => {
+        ProductsServices.destroy.restore();
+      });
+
       it('é chamado o status com o código 204', async () => {
         await ProductsController.destroy(request, response);
 
@@ -264,16 +272,24 @@ describe('Testa a camada Controller de produtos', () => {
 
         expect(response.end.calledWith()).to.be.equal(true);
       });
-
-      it('o json não é chamado', async () => {
-        await ProductsController.destroy(request, response);
-
-        expect(response.json).to.have.not.been.called();
-      });
     });
 
     describe('Caso o produto não seja encontrado', () => {
-      const ERROR = { message: 'Product not found' };
+
+      const ERROR = {
+        error: {
+          code: 'Not Found',
+          message: 'Product not found',
+        },
+      };
+
+      before(() => {
+        sinon.stub(ProductsServices, 'destroy').resolves(ERROR);
+      });
+
+      after(() => {
+        ProductsServices.destroy.restore();
+      });
 
       it('é chamado o status com o código 404', async () => {
         await ProductsController.destroy(request, response);
@@ -284,7 +300,7 @@ describe('Testa a camada Controller de produtos', () => {
       it('é chamado o json com a mensagem de erro correta', async () => {
         await ProductsController.destroy(request, response);
 
-        expect(response.json.calledWith(ERROR)).to.be.equal(true);
+        expect(response.json.calledWith({ message: 'Product not found' })).to.be.equal(true);
       });
     });
   });
