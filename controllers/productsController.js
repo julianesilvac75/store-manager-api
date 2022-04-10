@@ -3,7 +3,8 @@ const {
   HTTP_NOT_FOUND_STATUS,
   HTTP_CONFLICT_STATUS,
   HTTP_CREATED_STATUS, 
-  HTTP_BAD_REQUEST_STATUS } = require('../helpers');
+  HTTP_BAD_REQUEST_STATUS, 
+  HTTP_NO_CONTENT_STATUS } = require('../helpers');
 const ProductsService = require('../services/productsService');
 
 const getAll = async (req, res) => {
@@ -58,9 +59,22 @@ const update = async (req, res) => {
   return res.status(HTTP_OK_STATUS).json(updatedProduct);
 };
 
+const destroy = async (req, res) => {
+  const { id } = req.params;
+
+  const deleted = await ProductsService.destroy(id);
+
+  if (deleted.error) {
+    return res.status(HTTP_NOT_FOUND_STATUS).json({ message: deleted.error.message });
+  }
+
+  return res.status(HTTP_NO_CONTENT_STATUS).end();
+};
+
 module.exports = {
   getAll,
   findById,
   create,
   update,
+  destroy,
 };
