@@ -62,9 +62,25 @@ const update = async ({ id, name, quantity }) => {
   return updatedProduct;
 };
 
+const destroy = async (id) => {
+  const deleted = await ProductsModel.destroy(id);
+
+  if (!deleted) {
+    return {
+      error: {
+        code: 'Not Found',
+        message: 'Product not found',
+      },
+    };
+  }
+
+  return deleted;
+};
+
 module.exports = {
   getAll,
   findById,
   create,
   update,
+  destroy,
 };
