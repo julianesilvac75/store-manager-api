@@ -209,4 +209,49 @@ describe('Testa a camada Services de produtos', () => {
       });
     });
   });
+
+  describe('Ao deletar um produto', () => {
+    const ID = 1;
+
+    describe('Caso o produto seja deletado com sucesso', () => {
+
+      before(() => {
+        sinon.stub(ProductsModel, 'destroy').resolves(true);
+      });
+
+      after(() => {
+        ProductsModel.destroy.restore();
+      });
+
+      it('retorna "true"', async () => {
+        const result = await ProductsService.destroy(ID);
+
+        expect(result).to.be.equal(true);
+      });
+    });
+
+    describe('Caso o id não seja encontrado', () => {
+      const ERROR = {
+        error: {
+          code: 'Not Found',
+          message: 'Product not found',
+        },
+      };
+
+      before(() => {
+        sinon.stub(ProductsModel, 'destroy').resolves(null);
+      });
+
+      after(() => {
+        ProductsModel.destroy.restore();
+      });
+
+      it('retorna um objeto com a mensagem de erro correta', async () => {
+        const result = await ProductsService.destroy(ID);
+
+        expect(result).to.be.a('object');
+        expect(result).to.be.deep.equal(ERROR);
+      });
+    });
+  });
 });
