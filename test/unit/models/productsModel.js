@@ -181,10 +181,19 @@ describe('Testa a camada Model de produtos', () => {
   });
 
   describe('Ao deletar um produto', () => {
+    const ID = 1;
+
     describe('caso seja deletado com sucesso', () => {
-      const ID = 1;
+      before(() => {
+        sinon.stub(connection, 'execute').resolves([{ affectedRows: 1 }]);
+      });
+
+      after(() => {
+        connection.execute.restore();
+      });
+
       it('retorna "true"', async () => {
-        const result = await ProductsModel.delete(ID);
+        const result = await ProductsModel.destroy(ID);
 
         expect(result).to.be.equal(true);
       });
@@ -192,8 +201,16 @@ describe('Testa a camada Model de produtos', () => {
 
     describe('caso o produto não seja deletado', () => {
 
+      before(() => {
+        sinon.stub(connection, 'execute').resolves([{ affectedRows: 0 }]);
+      });
+
+      after(() => {
+        connection.execute.restore();
+      });
+
       it('retorna "null"', async () => {
-        const result = await ProductsModel.delete(ID);
+        const result = await ProductsModel.destroy(ID);
         
         expect(result).to.be.equal(null);
       });
