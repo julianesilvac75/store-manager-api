@@ -179,4 +179,24 @@ describe('Testa a camada Model de produtos', () => {
       });
     })
   });
+
+  describe('Ao deletar um produto', () => {
+    describe('caso seja deletado com sucesso', () => {
+      const ID = 1;
+      it('retorna "true"', async () => {
+        const result = await ProductsModel.delete(ID);
+
+        expect(result).to.be.equal(true);
+      });
+    });
+
+    describe('caso o produto não seja deletado', () => {
+
+      it('retorna "null"', async () => {
+        const result = await ProductsModel.delete(ID);
+        
+        expect(result).to.be.equal(null);
+      });
+    });
+  });
 });
