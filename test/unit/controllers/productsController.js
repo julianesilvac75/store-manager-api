@@ -1,7 +1,7 @@
 const sinon = require('sinon');
 const { expect } = require('chai');
 
-const { HTTP_OK_STATUS, HTTP_NOT_FOUND_STATUS, HTTP_CREATED_STATUS, HTTP_CONFLICT_STATUS, HTTP_BAD_REQUEST_STATUS } = require('../../../helpers');
+const { HTTP_OK_STATUS, HTTP_NOT_FOUND_STATUS, HTTP_CREATED_STATUS, HTTP_CONFLICT_STATUS, HTTP_BAD_REQUEST_STATUS, HTTP_NO_CONTENT_STATUS } = require('../../../helpers');
 const {
   products,
   product } = require('../stubs');
@@ -21,6 +21,7 @@ describe('Testa a camada Controller de produtos', () => {
   before(() => {
     response.status = sinon.stub().returns(response);
     response.json = sinon.stub().returns(response);
+    response.end = sinon.stub().returns();
   });
 
   describe('Ao acessar todos os produtos', () => {
@@ -244,6 +245,46 @@ describe('Testa a camada Controller de produtos', () => {
         await ProductsController.update(request, response);
 
         expect(response.json.calledWith({ message: 'Product not found' })).to.be.equal(true);
+      });
+    });
+  });
+
+  describe('Ao deletar um produto', () => {
+
+    describe('Caso o produto seja deletado com sucesso', () => {
+
+      it('é chamado o status com o código 204', async () => {
+        await ProductsController.destroy(request, response);
+
+        expect(response.status.calledWith(HTTP_NO_CONTENT_STATUS)).to.be.equal(true);
+      });
+
+      it('é chamado o end sem parâmetros', async () => {
+        await ProductsController.destroy(request, response);
+
+        expect(response.end.calledWith()).to.be.equal(true);
+      });
+
+      it('o json não é chamado', async () => {
+        await ProductsController.destroy(request, response);
+
+        expect(response.json).to.have.not.been.called();
+      });
+    });
+
+    describe('Caso o produto não seja encontrado', () => {
+      const ERROR = { message: 'Product not found' };
+
+      it('é chamado o status com o código 404', async () => {
+        await ProductsController.destroy(request, response);
+
+        expect(response.status.calledWith(HTTP_NOT_FOUND_STATUS)).to.be.equal(true);
+      });
+
+      it('é chamado o json com a mensagem de erro correta', async () => {
+        await ProductsController.destroy(request, response);
+
+        expect(response.json.calledWith(ERROR)).to.be.equal(true);
       });
     });
   });
